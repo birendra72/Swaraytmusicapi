@@ -45,3 +45,48 @@ def get_song_details(video_id: str):
         return {"status": "success", "data": details}
     except Exception as e:
         raise HTTPException(status_code=404, detail="Song data not found")
+
+@app.get("/podcasts")
+def get_podcasts(query: str, limit: int = 20):
+    """
+    Search for podcasts in YTMusic.
+    """
+    try:
+        results = yt.search(query=query, filter="podcasts", limit=limit)
+        return {"status": "success", "data": results}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/videos")
+def get_videos(query: str, limit: int = 20):
+    """
+    Search for videos in YTMusic.
+    """
+    try:
+        results = yt.search(query=query, filter="videos", limit=limit)
+        return {"status": "success", "data": results}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/live")
+def get_live(query: str, limit: int = 20):
+    """
+    Search for live streams in YTMusic.
+    Since there is no explicit 'live' filter, we search general results.
+    """
+    try:
+        results = yt.search(query=query, limit=limit)
+        return {"status": "success", "data": results}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/charts")
+def get_global_charts(country: str = "IN"):
+    """
+    Get top charts for a specific country.
+    """
+    try:
+        charts = yt.get_charts(country=country)
+        return {"status": "success", "data": charts}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
